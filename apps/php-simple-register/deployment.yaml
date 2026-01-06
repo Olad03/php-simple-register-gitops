@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: php-simple-register-app
     app.kubernetes.io/component: backend
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: php-simple-register-app
