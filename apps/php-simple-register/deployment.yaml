@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: php-simple-register-app
+  name: php-simple-register
 spec:
   replicas: 2
   selector:
@@ -13,11 +13,13 @@ spec:
         app: php-simple-register
     spec:
       containers:
-        - name: app
-          image: image-registry.openshift-image-registry.svc:5000/php-simple-register-app/php-simple-register:latest
+        - name: php
+          image: image-registry.openshift-image-registry.svc:5000/php-simple-register/php-simple-register:latest
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
+            - name: DOCUMENTROOT
+              value: /var/www/html/app
             - name: DB_HOST
               value: mysql
             - name: DB_NAME
