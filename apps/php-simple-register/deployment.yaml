@@ -2,35 +2,53 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: php-simple-register-app
+  namespace: php-simple-register-app
+  labels:
+    app: php-simple-register-app
+    app.kubernetes.io/name: php-simple-register-app
+    app.kubernetes.io/instance: php-simple-register-app
+    app.kubernetes.io/component: backend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: php-simple-register-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   template:
     metadata:
       labels:
         app: php-simple-register-app
     spec:
       containers:
-        - name: php
-          image: image-registry.openshift-image-registry.svc:5000/php-simple-register/php-simple-register:latest
+        - name: php-simple-register-app
+          image: image-registry.openshift-image-registry.svc:5000/php-simple-register-app/php-simple-register-app:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
-          env:
-            - name: DOCUMENTROOT
-              value: /var/www/html/app
-            - name: DB_HOST
-              value: mysql
-            - name: DB_NAME
-              value: register
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mysql
-                  key: database-user
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql
-                  key: database-password
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /login.php
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /login.php
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+
