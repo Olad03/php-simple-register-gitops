@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: php-register-ci
+spec:
+  workspaces:
+    - name: shared-workspace
+  params:
+    - name: IMAGE
+  tasks:
+    - name: build
+      taskRef:
+        name: build-and-push
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
