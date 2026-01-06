@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: php-simple-register
+  name: php-simple-register-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: php-simple-register
+      app: php-simple-register-app
   template:
     metadata:
       labels:
-        app: php-simple-register
+        app: php-simple-register-app
     spec:
       containers:
         - name: php

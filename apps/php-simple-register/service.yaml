@@ -4,7 +4,7 @@ metadata:
   name: php-simple-register-app
 spec:
   selector:
-    app: php-simple-register
+    app: php-simple-register-app
   ports:
     - port: 80
       targetPort: 80
